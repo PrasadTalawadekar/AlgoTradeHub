@@ -48,14 +48,54 @@ class Upstox_auth:
             token_info = response.json()
             access_token = token_info.get('access_token')
             print(f"Access Token: {access_token}")
+            return access_token
         else:
             print(f"Error: {response.status_code}, {response.text}")
+            return None
     
-upstox_url = Upstox_auth.generate_upstox_url()
-print("Generated URL:", upstox_url)
+    def check_current_directory():
+        import os
+        from datetime import datetime
 
-# Ask for the code input after the URL is generated
-code = input("Enter the code from the redirect URL: ")
+        # Set the working directory
+        os.chdir(r"C:\Users\prasa\Music\Algo Trading-Environment\AlgoTradeHub")
 
-# Call the function to get the access token
-Upstox_auth.get_upstox_token(code)
+        # Current directory and file path
+        current_directory = os.getcwd()
+        file_path = os.path.join(current_directory, "token.txt")
+
+        # Check if the file exists
+        if os.path.exists(file_path):            
+            # Check the last updated date
+            last_modified_date = datetime.fromtimestamp(os.path.getmtime(file_path)).date()
+            today_date = datetime.today().date()
+
+            if last_modified_date == today_date:
+                print("File is updated")
+            else:
+                print("File is not updated")
+                upstox_url = Upstox_auth.generate_upstox_url()
+                print("Generated URL:", upstox_url)
+                code = input("Enter the code from the redirect URL: ")
+                token = Upstox_auth.get_upstox_token(code)
+                
+
+
+                # Write code to the file
+                with open(file_path, 'w') as file:
+                    file.write(token)
+        else:
+            upstox_url = Upstox_auth.generate_upstox_url()
+            print("Generated URL:", upstox_url)
+            code = input("Enter the code from the redirect URL: ")
+            token = Upstox_auth.get_upstox_token(code)
+            # Create and write to the file
+            with open(file_path, 'w') as file:
+                file.write(token)
+
+
+
+
+
+
+Upstox_auth.check_current_directory()
