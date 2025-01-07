@@ -1,2 +1,3 @@
 # AlgoTradeHub
 A repository showcasing diverse algorithmic trading strategies, featuring backtesting, live data integration via APIs, and performance visualizations. Includes modular Python code for SMA, EMA, and RSI strategies, along with planned enhancements like ML models and advanced risk management.
+We have developed a class named UpstoxAuth designed to facilitate the use of methods outlined in the Upstox documentation. This class streamlines the process of generating a token if needed and retrieving an existing access token when available.---[Upstox-API-DOCUMENTATION](https://upstox.com/developer/api-documentation/open-api)
