@@ -1,4 +1,5 @@
 import requests
+import urllib.parse
 class Upstox_auth:
     client_id_input = 'a3c35f85-5ba0-4e4b-bde5-44c56d60c0ce'
     redirect_uri_input = 'https://127.0.0.1:5000/'
@@ -460,10 +461,276 @@ class Upstox_auth:
         print(response.status_code)
         return (response.json())
 
+    def historical_minute_1_candle_data(instrument_token, from_date, to_date):
+
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/{instrument_token_processed}/1minute/{to_date}/{from_date}' #2023-11-13/2023-11-12
+        headers = {
+            'Accept': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            
+            return (response.json())
+        else:
+            
+            print(f"Error: {response.status_code} - {response.text}")
+
+    def historical_minute_30_candle_data(instrument_token, from_date, to_date):
+
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/{instrument_token_processed}/30minute/{to_date}/{from_date}' #2023-11-13/2023-11-12
+        headers = {
+            'Accept': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            
+            return (response.json())
+        else:
+            
+            print(f"Error: {response.status_code} - {response.text}")
+
+    def historical_day_candle_data(instrument_token, from_date, to_date):
+
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/{instrument_token_processed}/day/{to_date}/{from_date}' #2023-11-13/2023-11-12
+        headers = {
+            'Accept': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            
+            return (response.json())
+        else:
+            
+            print(f"Error: {response.status_code} - {response.text}")
+
+    def historical_week_candle_data(instrument_token, from_date, to_date):
+        
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/{instrument_token_processed}/week/{to_date}/{from_date}' #2023-11-13/2023-11-12
+        headers = {
+            'Accept': 'application/json'
+        }
+
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            
+            return (response.json())
+        else:
+            
+            print(f"Error: {response.status_code} - {response.text}")
+
+    def historical_month_candle_data(instrument_token, from_date, to_date):
+        
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/{instrument_token_processed}/month/{to_date}/{from_date}' #2023-11-13/2023-11-12
+        headers = {
+            'Accept': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            
+            return (response.json())
+        else:
+            
+            print(f"Error: {response.status_code} - {response.text}")   
+
+    def intraday_minute_1_candle_data(instrument_token):
+
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/intraday/{instrument_token_processed}/1minute'
+        headers = {
+            'Accept': 'application/json'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        # Check the response status
+        if response.status_code == 200:
+            # Do something with the response data (e.g., print it)
+            return (response.json())
+        else:
+            # Print an error message if the request was not successful
+            print(f"Error: {response.status_code} - {response.text}")
+
+    def intraday_minute_30_candle_data(instrument_token):
+
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/historical-candle/intraday/{instrument_token_processed}/30minute'
+        headers = {
+            'Accept': 'application/json'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        # Check the response status
+        if response.status_code == 200:
+            # Do something with the response data (e.g., print it)
+            return (response.json())
+        else:
+            # Print an error message if the request was not successful
+            print(f"Error: {response.status_code} - {response.text}")
+
+    def full_market_quote(instrument_token, token):
+
+        
+        instrument_token_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/market-quote/quotes?instrument_key={instrument_token_processed}'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return (response.text)
+
+    def full_market_quote_multiple(instrument_token_list, token):
+
+        
+        instrument_tokens_processed = urllib.parse.quote(instrument_token_list[0], safe='')
+
+        for i in range(1, len(instrument_token_list)):
+            instrument_tokens_processed = instrument_tokens_processed+',' + instrument_token_list[i]
+
+        url = f'https://api.upstox.com/v2/market-quote/quotes?instrument_key={instrument_tokens_processed}'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return (response.text)
+
+    def full_market_new(instrument_token_list, token):
+
+        if isinstance(instrument_token_list, str):
+            instrument_tokens_processed = urllib.parse.quote(instrument_token_list, safe='')
+        else:
+            instrument_tokens_processed = urllib.parse.quote(instrument_token_list[0], safe='')
+
+            for i in range(1, len(instrument_token_list)):
+                instrument_tokens_processed = instrument_tokens_processed+',' + instrument_token_list[i]
+
+        url = f'https://api.upstox.com/v2/market-quote/quotes?instrument_key={instrument_tokens_processed}'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return (response.text)
+
+    def LTP_new(instrument_token_list, token):
+
+        if isinstance(instrument_token_list, str):
+            instrument_tokens_processed = urllib.parse.quote(instrument_token_list, safe='')
+        else:
+            instrument_tokens_processed = urllib.parse.quote(instrument_token_list[0], safe='')
+
+            for i in range(1, len(instrument_token_list)):
+                instrument_tokens_processed = instrument_tokens_processed+',' + instrument_token_list[i]
+
+        url = f'https://api.upstox.com/v2/market-quote/ltp?instrument_key={instrument_tokens_processed}'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return (response.text)
+
+    def OHLC_new(instrument_token_list, token):
+
+        url = 'https://api.upstox.com/v2/market-quote/ohlc'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}', 
+        }
+
+        if isinstance(instrument_token_list, str):
+
+            data = {
+                "instrument_key": instrument_token_list,
+                "interval": "1d"
+            }
+        
+        else:
+            new_string = ','.join(instrument_token_list)
+            data = {
+                "instrument_key": new_string,
+                "interval": "1d"
+            }
+
+        response = requests.get(url, headers=headers, params=data)
+
+        print(response.status_code)
+        return(response.json())
+
+    def option_contract(instrument_token, token):
+
+        instrument_tokens_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/option/contract?instrument_key={instrument_tokens_processed}'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return (response.text)
+
+    def option_contract_sate(instrument_token,expiry_date, token):
+
+        instrument_tokens_processed = urllib.parse.quote(instrument_token, safe='')
+
+        url = f'https://api.upstox.com/v2/option/contract?instrument_key={instrument_tokens_processed}&expiry_date={expiry_date}'#2024-03-28
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return (response.text)
+
+    def put_call_option_chain(instrument_token, expiry_date, token):
+
+        url = 'https://api.upstox.com/v2/option/chain'
+        params = {
+            'instrument_key': instrument_token, #'NSE_INDEX|Nifty 50'
+            'expiry_date': expiry_date #'2024-03-28'
+        }
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+
+        return (response.json())
+
 
 token = Upstox_auth.getToken()
-print(Upstox_auth.trade_charges('01-05-2024','31-12-2024','EQ','2425',token))
-
-
-
     
