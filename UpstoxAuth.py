@@ -49,7 +49,7 @@ class Upstox_auth:
             print(f"Error: {response.status_code}, {response.text}")
             return None
     
-    def check_current_directory():
+    def getToken():
         import os
         from datetime import datetime
 
@@ -156,8 +156,8 @@ class Upstox_auth:
 
         response = requests.post(url, headers=headers, json=data)
 
-        print(response.status_code)
-        print(response.json())
+        
+        return (response.json())
 
     #to do actions
     def place_order(quantity:int, product, validity, price, tag, instrument_token, order_type, transaction_type, disclosed_quantity, trigger_price, is_amo, token):
@@ -190,7 +190,7 @@ class Upstox_auth:
 
             # Print the response status code and body
             print('Response Code:', response.status_code)
-            print('Response Body:', response.json())
+            return response.json()
             return (response.json()['data']['order_id'])
 
         except Exception as e:
@@ -217,7 +217,7 @@ class Upstox_auth:
         }
 
         response = requests.put(url, headers=headers, json=data)
-        print(response.text)
+        return response.text
 
     def get_order_details(order_id,token):
 
@@ -231,7 +231,7 @@ class Upstox_auth:
 
         response = requests.get(url, headers=headers, params=params)
 
-        print(response.text)
+        return (response.text)
 
     def get_orderbook(token):
         url = 'https://api.upstox.com/v2/order/retrieve-all'
@@ -240,7 +240,7 @@ class Upstox_auth:
             'Authorization': f'Bearer {token}'
         }
         response = requests.get(url, headers=headers)
-        print(response.text)
+        return response.text
 
     def get_order_history(order_id,token):
         url = 'https://api.upstox.com/v2/order/history'
@@ -253,7 +253,7 @@ class Upstox_auth:
 
         response = requests.get(url, headers=headers, params=params)
 
-        print(response.text)
+        return response.text
 
     def cancel_order(order_id,token):
         import requests
@@ -266,7 +266,7 @@ class Upstox_auth:
 
         response = requests.delete(url, headers=headers)
 
-        print(response.text)
+        return response.text
 
     def exit_all_positions(token):
         url = 'https://api.upstox.com/v2/order/positions/exit'
@@ -284,7 +284,7 @@ class Upstox_auth:
 
             # Print the response status code and body
             print('Response Code:', response.status_code)
-            print('Response Body:', response.json())
+            return response.json()
 
         except Exception as e:
             # Handle exceptions
@@ -297,7 +297,7 @@ class Upstox_auth:
             'Authorization': f'Bearer {token}'
         }
         response = requests.delete(url, headers=headers)
-        print(response.text)
+        return response.text
 
     def get_today_trade(token):
     
@@ -308,7 +308,7 @@ class Upstox_auth:
         }
 
         response = requests.get(url, headers=headers)
-        print(response.text)
+        return response.text
 
     def get_old_trade(segment,start_date,end_date,page_number,page_size,token):
         url = 'https://api.upstox.com/v2/charges/historical-trades'
@@ -328,7 +328,7 @@ class Upstox_auth:
 
         if response.status_code == 200:
             data = response.json()
-            print(data)
+            return (data)
         else:
             print(f"Error: {response.status_code} - {response.text}")
 
@@ -340,9 +340,129 @@ class Upstox_auth:
         }
 
         response = requests.get(url, headers=headers)
-        print(response.text)
+        return response.text
 
-token = Upstox_auth.check_current_directory()
+    def get_holdings(token):
+        
+        url = 'https://api.upstox.com/v2/portfolio/long-term-holdings'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        print(response.json())
+
+    def get_positions(token):
+        url = 'https://api.upstox.com/v2/portfolio/short-term-positions'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        print(response.json())
+
+    def convert_position(instrument_token, older_product, transaction_type, quantity, token):
+        
+
+        url = 'https://api.upstox.com/v2/portfolio/convert-position'
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}',  # Replace {your_access_token} with your actual access token
+        }
+
+        if older_product == 'I':
+            data = {
+                "instrument_token": instrument_token,
+                "new_product": "D",
+                "old_product": "I",
+                "transaction_type": transaction_type,
+                "quantity": quantity
+            }
+        else:
+            data = {
+                "instrument_token": instrument_token,
+                "new_product": "I",
+                "old_product": "D",
+                "transaction_type": transaction_type,
+                "quantity": quantity
+            }
+
+        response = requests.put(url, headers=headers, json=data)
+
+
+        return(response.json())
+
+    def get_metadata(from_date, to_date, segment, financial_year, token):
+
+        url = 'https://api.upstox.com/v2/trade/profit-loss/metadata'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        params = {
+            'from_date': from_date, #'05-11-2023'
+            'to_date': to_date, #'19-12-2023'
+            'segment': segment, #'EQ','FO'
+            'financial_year': financial_year, #'2324'
+        }
+
+        response = requests.get(url, headers=headers, params=params)
+
+        print(response.status_code)
+        return (response.json())
+
+    def getPLreport(from_date, to_date, segment, financial_year, page_number, page_size, token):
+        
+        url = 'https://api.upstox.com/v2/trade/profit-loss/data'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        params = {
+            'from_date': from_date, #'05-11-2023',
+            'to_date': to_date, #'19-12-2023',
+            'segment': segment, #'EQ',
+            'financial_year': financial_year, #'2324',
+            'page_number': page_number, #'1',
+            'page_size': page_size #'4'
+        }
+
+        response = requests.get(url, headers=headers, params=params)
+
+        print(response.status_code)
+        return (response.json())
+
+    def trade_charges(from_date, to_date, segment, financial_year, token):
+        
+
+        url = 'https://api.upstox.com/v2/trade/profit-loss/charges'
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {token}'
+        }
+
+        params = {
+            'from_date': from_date, #'05-11-2023',
+            'to_date': to_date, #'19-12-2023',
+            'segment': segment, #'EQ',
+            'financial_year': financial_year #'2324'
+        }
+
+        response = requests.get(url, headers=headers, params=params)
+
+        print(response.status_code)
+        return (response.json())
+
+
+token = Upstox_auth.getToken()
+print(Upstox_auth.trade_charges('01-05-2024','31-12-2024','EQ','2425',token))
 
 
 
